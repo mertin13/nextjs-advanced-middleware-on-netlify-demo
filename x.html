@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gay-inator</title>
+  <style>
+    body {
+      font-family: "Bahnschrift SemiBold", Arial, sans-serif;
+      background-color: #1f1f1f;
+      color: #e0e0e0;
+      margin: 0;
+      padding: 20px;
+      font-size: 3.5rem;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #333;
+      padding: 40px;
+      border-radius: 10px;
+      font-size: 3rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      max-width: 500px; /* Adjust the value as needed */
+      padding: 20px;
+      border: 1px solid #666;
+      border-radius: 5px;
+      margin-bottom: 30px;
+      font-size: 3rem;
+      background-color: #555;
+      color: #e0e0e0;
+      font-family: "Bahnschrift SemiBold", Arial, sans-serif;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+      transform: scale(2.5);
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      padding: 20px 40px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 3.5rem;
+      font-family: "Bahnschrift SemiBold", Arial, sans-serif;
+    }
+
+    p#result {
+      font-weight: bold;
+      text-align: center;
+      font-size: 4.5rem;
+      margin-top: 0;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 1.5rem;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Bahnschrift:wght@600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>Gay-inator</h1>
+
+  <div id="questionContainer">
+    <!-- Placeholder for the question -->
+  </div>
+
+  <div id="resultContainer" style="display: none;">
+    <h2>Quiz completed!</h2>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    var questions = [
+      {
+        text: "What is your name?",
+        id: "name"
+      },
+      {
+        text: "How much do you weigh?",
+        id: "mass"
+      },
+      {
+        text: "What's your height?",
+        id: "height"
+      },
+      {
+        text: "Do you play video games?",
+        id: "games"
+      },
+      {
+        text: "Do you regularly play games from Riot?",
+        id: "lol"
+      },
+      {
+        text: "Would you rather hang out with the homies or the girls?",
+        id: "hangout"
+      },
+      {
+        text: "Have your balls ever been grabbed by a guy or have you ever been kissed by one?",
+        id: "balls"
+      },
+      {
+        text: "Are you studying computer science?",
+        id: "compsci"
+      },
+      {
+        text: "Would you rather listen to Tuyo or Kpop?",
+        id: "music"
+      },
+      {
+        text: "Hacı Şakir mi, öküz sütü sabunu mu?",
+        id: "sabun"
+      },
+      {
+        text: "Are you in depression?",
+        id: "depression"
+      }
+    ];
+
+    var currentQuestionIndex = 0;
+    var answers = {};
+
+    function loadQuestion() {
+      var questionContainer = document.getElementById("questionContainer");
+      var question = questions[currentQuestionIndex];
+      var questionHTML = `
+        <form onsubmit="return submitAnswer(event)">
+          <label for="${question.id}">${question.text}</label>
+          <input type="text" id="${question.id}">
+          <button type="submit">Submit</button>
+        </form>
+      `;
+      questionContainer.innerHTML = questionHTML;
+    }
+
+    function submitAnswer(event) {
+      event.preventDefault();
+
+      var question = questions[currentQuestionIndex];
+      var answer = document.getElementById(question.id).value;
+      answers[question.id] = answer;
+
+      currentQuestionIndex++;
+
+      if (currentQuestionIndex < questions.length) {
+        loadQuestion();
+      } else {
+        displayResult();
+      }
+
+      return false;
+    }
+
+    function displayResult() {
+      var resultContainer = document.getElementById("resultContainer");
+      var result = calculateGayness();
+      var resultHTML = `
+        <h2>Quiz completed!</h2>
+        <p id="result">Hesaplamalarıma göre ${result}% gaysin.</p>
+      `;
+      resultContainer.innerHTML = resultHTML;
+      resultContainer.style.display = "block";
+    }
+
+    function calculateGayness() {
+      var x = 0;
+
+      var name = answers["name"].toLowerCase();
+      if (name === "kuzey") {
+        return 100;
+      }
+
+      var mass = parseFloat(answers["mass"]);
+      var height = parseFloat(answers["height"]);
+
+      var bmi = mass / (height * height);
+      if (bmi >= 25) {
+        x += 15;
+      }
+
+      var games = answers["games"].toLowerCase();
+      if (games === "yes") {
+        var lol = answers["lol"].toLowerCase();
+        if (lol === "yes") {
+          x += 15;
+        }
+      }
+
+      var hangout = answers["hangout"].toLowerCase();
+      if (hangout === "girls") {
+        x += 15;
+      }
+
+      var balls = answers["balls"].toLowerCase();
+      if (balls === "yes") {
+        x += 5;
+      }
+
+      var compsci = answers["compsci"].toLowerCase();
+      if (compsci === "yes") {
+        x += 15;
+      }
+
+      var music = answers["music"].toLowerCase();
+      if (music === "tuyo") {
+        x -= 5;
+      } else {
+        x += 15;
+      }
+
+      var sabun = answers["sabun"].toLowerCase();
+      if (sabun === "öküz sütü") {
+        x += 15;
+      }
+
+      var depression = answers["depression"].toLowerCase();
+      if (depression === "yes") {
+        x += 5;
+      }
+
+      return x;
+    }
+
+    loadQuestion();
+  </script>
+
+  <div class="footer">
+    <p style="font-size: 1.5rem; color: #ccc;">Neatly designed by sadiga and dalin şampu</p>
+  </div>
+</body>
+</html>
